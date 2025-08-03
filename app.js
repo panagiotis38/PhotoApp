@@ -63,7 +63,7 @@ btnUpload.addEventListener('click',async ()=>{
   try{
     const compressed = await imageCompression(blob, {maxSizeMB:1, maxWidthOrHeight:1920, useWebWorker:true});
     const path = `${userId}/${Date.now()}.jpg`;
-    const { error } = await supabase.storage.from('user_uploads').upload(path, compressed, { cacheControl:'3600', upsert:false });
+    const { error } = await supabase.storage.from('user-uploads').upload(path, compressed, { cacheControl:'3600', upsert:false });
     if(error) throw error;
     remaining--;
     updateCounter();
