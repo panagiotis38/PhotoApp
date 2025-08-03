@@ -57,24 +57,59 @@ btnRetake.addEventListener('click',()=>{
   btnCapture.disabled = remaining <= 0;
 });
 
-btnUpload.addEventListener('click',async ()=>{
-  btnUpload.disabled=true;
+btnUpload.addEventListener('click', async () => {
+  // Disable button immediately
+  btnUpload.disabled = true;
   msgEl.textContent = 'Compressing...';
-  try{
-    const compressed = await imageCompression(blob, {maxSizeMB:1, maxWidthOrHeight:1920, useWebWorker:true});
-    const path = `${userId}/${Date.now()}.jpg`;
-    const { error } = await supabase.storage.from('user-uploads').upload(path, compressed, { cacheControl:'3600', upsert:false });
-    if(error) throw error;
+  
+  try {
+    // Debug: Check auth state
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) throw new Error("Not authenticated");
+    
+    console.log('Current user ID:', user.id);
+    
+    // Compress image
+    const compressed = await imageCompression(blob, {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true
+    });
+    
+    const path = `${user.id}/${Date.now()}.jpg`;
+    console.log('Upload path:', path);
+    
+    // Verify path matches policy requirements
+    if (!path.startsWith(`${user.id}/`)) {
+      throw new Error("Invalid upload path");
+    }
+    
+    // Upload file
+    const { error: uploadError } = await supabase.storage
+      .from('user-uploads')
+      .upload(path, compressed, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: 'image/jpeg'
+      });
+    
+    if (uploadError) throw uploadError;
+    
+    // Success handling
     remaining--;
     updateCounter();
     msgEl.textContent = 'Uploaded!';
-  } catch(e){
-    console.error(e);
-    msgEl.textContent='Upload failed.';
+    photoPreview.style.display = 'none';
+    
+    if (remaining > 0) {
+      btnCapture.disabled = false;
+    }
+    
+  } catch (error) {
+    console.error('Upload failed:', error);
+    msgEl.textContent = `Upload failed: ${error.message}`;
     btnUpload.disabled = false;
   }
-  photoPreview.style.display='none';
-  if(remaining>0) btnCapture.disabled=false;
 });
 
 async function init(){
