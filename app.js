@@ -1,5 +1,5 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-import imageCompression from 'https://unpkg.com/browser-image-compression@latest';
+import { imageCompression } from 'https://unpkg.com/browser-image-compression@latest';
 
 const SUPABASE_URL = 'YOUR_SUPABASE_URL';
 const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY'; 
