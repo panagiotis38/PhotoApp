@@ -18,6 +18,7 @@ let stream = null, blob = null;
 let remaining = 10;
 let userId = null;
 
+
 function updateCounter(){
   counterEl.textContent = remaining;
   if(remaining <= 0){
