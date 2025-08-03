@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF‑8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Photo Upload App (Supabase)</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <div id="app">
+    <video id="preview" autoplay playsinline></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <div id="controls">
+      <button id="btnCapture" disabled>Take Photo</button>
+    </div>
+    <div id="photoPreview" style="display:none;">
+      <img id="photoImg" src=""/>
+      <button id="btnUpload">Upload</button>
+      <button id="btnRetake">Retake</button>
+    </div>
+    <div id="counterCarousel">
+      <div id="counter">10</div>
+    </div>
+    <div id="message"></div>
+  </div>
+
+  <!-- include supabase.js and image compression lib -->
+  <script type="module" src="app.js"></script>
+  <script src="https://unpkg.com/browser-image-compression@latest/dist/browser-image-compression.js"></script>
+</body>
+</html>
